@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向医疗散热与余热回收研究的在线论文数据库">
+  <meta name="theme-color" content="#102b2b">
+  <title>热研库 · 医疗散热与余热回收</title>
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="热研库首页">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" role="img">
+            <path d="M27.5 5.5c1.2 8-5.4 9.7-5.2 16.2.1 2.9 1.7 5.1 4 6.1-.3-4.3 2.8-6.6 7.1-10.1 4.8 4.3 7.1 8.4 6.4 13.4C39 38.5 32.9 43 24.9 43 16.2 43 10 36.9 10 29c0-7.7 5.3-11.2 8.7-17.5 1.8 3.1 2.2 5.8 1.8 8.7 3-4.5 4.5-9.4 7-14.7Z"/>
+          </svg>
+        </span>
+        <span>
+          <strong>热研库</strong>
+          <small>THERMAL RESEARCH HUB</small>
+        </span>
+      </a>
+
+      <nav class="primary-nav" aria-label="论文分类">
+        <button class="nav-item active" data-category="all">
+          <span class="nav-icon">⌂</span>
+          <span>全部论文</span>
+          <b id="navTotal">0</b>
+        </button>
+        <button class="nav-item" data-category="医疗散热">
+          <span class="nav-icon">✚</span>
+          <span>医疗散热</span>
+          <b data-count-category="医疗散热">0</b>
+        </button>
+        <button class="nav-item" data-category="余热回收">
+          <span class="nav-icon">↻</span>
+          <span>余热回收</span>
+          <b data-count-category="余热回收">0</b>
+        </button>
+        <button class="nav-item" data-category="热泵与储热">
+          <span class="nav-icon">◫</span>
+          <span>热泵与储热</span>
+          <b data-count-category="热泵与储热">0</b>
+        </button>
+        <button class="nav-item" data-category="竞赛与综述">
+          <span class="nav-icon">◇</span>
+          <span>竞赛与综述</span>
+          <b data-count-category="竞赛与综述">0</b>
+        </button>
+      </nav>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">
+          <span>阅读状态</span>
+          <button class="text-button" id="clearFilters" type="button">清空</button>
+        </div>
+        <button class="status-row" data-status="待核验">
+          <span class="status-dot pending"></span>
+          <span>待核验</span>
+          <b data-count-status="待核验">0</b>
+        </button>
+        <button class="status-row" data-status="已摘要">
+          <span class="status-dot summary"></span>
+          <span>已摘要</span>
+          <b data-count-status="已摘要">0</b>
+        </button>
+        <button class="status-row" data-status="已精读">
+          <span class="status-dot read"></span>
+          <span>已精读</span>
+          <b data-count-status="已精读">0</b>
+        </button>
+        <button class="status-row" data-status="已引用">
+          <span class="status-dot cited"></span>
+          <span>已引用</span>
+          <b data-count-status="已引用">0</b>
+        </button>
+      </div>
+
+      <div class="sidebar-note">
+        <span class="mini-pulse"></span>
+        <div>
+          <strong id="modeTitle">本机模式</strong>
+          <p id="modeDescription">数据只保存在当前浏览器</p>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <button id="openSettings" class="sidebar-action" type="button">
+          <span>⚙</span> 数据库设置
+        </button>
+        <button id="authButton" class="sidebar-action" type="button">
+          <span>◎</span> 登录云端
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" type="button" aria-label="打开菜单">☰</button>
+        <div class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="搜索题名、作者、场景、关键词、DOI…" autocomplete="off">
+          <kbd>⌘ K</kbd>
+        </div>
+        <div class="topbar-actions">
+          <button class="button button-quiet" id="openImport" type="button">
+            <span>⇧</span> 导入
+          </button>
+          <button class="button button-primary" id="openAdd" type="button">
+            <span>＋</span> 新增论文
+          </button>
+        </div>
+      </header>
+
+      <div class="content-wrap">
+        <section class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow"><span></span> RESEARCH KNOWLEDGE BASE</div>
+            <h1>让每一份热，都有<br><em>可追踪的研究价值。</em></h1>
+            <p>围绕医疗设备散热、低品位余热回收与热泵储热，建立从文献证据到竞赛问题的研究闭环。</p>
+            <div class="hero-actions">
+              <button class="button button-light" id="heroAdd" type="button">录入第一篇论文 <span>→</span></button>
+              <button class="button button-ghost-light" id="openGuide" type="button">阅读入库规范</button>
+            </div>
+          </div>
+          <div class="thermal-visual" aria-hidden="true">
+            <div class="thermal-orbit orbit-1"></div>
+            <div class="thermal-orbit orbit-2"></div>
+            <div class="thermal-core">
+              <span>TH</span>
+              <small>HEAT / CARE</small>
+            </div>
+            <div class="thermal-node node-a"><i></i><span>医疗散热</span></div>
+            <div class="thermal-node node-b"><i></i><span>余热回收</span></div>
+            <div class="thermal-node node-c"><i></i><span>热泵储热</span></div>
+            <div class="heat-line line-a"></div>
+            <div class="heat-line line-b"></div>
+            <div class="heat-line line-c"></div>
+          </div>
+        </section>
+
+        <section class="stats-grid" aria-label="论文统计">
+          <article class="stat-card">
+            <div class="stat-icon coral">▤</div>
+            <div>
+              <span>文献总量</span>
+              <strong id="statTotal">0</strong>
+              <small>篇已入库</small>
+            </div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon aqua">✓</div>
+            <div>
+              <span>精读完成</span>
+              <strong id="statRead">0</strong>
+              <small id="statReadRate">完成率 0%</small>
+            </div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon gold">◎</div>
+            <div>
+              <span>待核验</span>
+              <strong id="statPending">0</strong>
+              <small>需要回到原文</small>
+            </div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon violet">↗</div>
+            <div>
+              <span>近五年文献</span>
+              <strong id="statRecent">0</strong>
+              <small>保持研究时效</small>
+            </div>
+          </article>
+        </section>
+
+        <section class="library-section">
+          <div class="section-heading">
+            <div>
+              <div class="overline">PAPER LIBRARY</div>
+              <h2>文献库</h2>
+            </div>
+            <div class="view-controls">
+              <label class="select-wrap">
+                <span>排序</span>
+                <select id="sortSelect">
+                  <option value="updated_desc">最近更新</option>
+                  <option value="year_desc">年份从新到旧</option>
+                  <option value="year_asc">年份从旧到新</option>
+                  <option value="title_asc">题名 A–Z</option>
+                  <option value="relevance_desc">相关性优先</option>
+                </select>
+              </label>
+              <div class="view-toggle" role="group" aria-label="显示方式">
+                <button class="active" data-view="grid" type="button" aria-label="卡片视图">▦</button>
+                <button data-view="table" type="button" aria-label="表格视图">☷</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <div class="active-filters" id="activeFilters"></div>
+            <div class="result-count" id="resultCount">0 篇文献</div>
+          </div>
+
+          <div id="paperGrid" class="paper-grid" aria-live="polite"></div>
+
+          <div id="emptyState" class="empty-state" hidden>
+            <div class="empty-illustration">
+              <div class="empty-ring"></div>
+              <span>⌁</span>
+            </div>
+            <h3 id="emptyTitle">文献库还是空的</h3>
+            <p id="emptyText">从一篇真正读过的论文开始。先录入基本信息，再逐步补充热源、热汇、方法和局限。</p>
+            <button class="button button-primary" id="emptyAdd" type="button">＋ 新增论文</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="paperDialog" class="dialog dialog-wide">
+    <form id="paperForm" class="dialog-form">
+      <div class="dialog-head">
+        <div>
+          <div class="overline">PAPER RECORD</div>
+          <h2 id="paperDialogTitle">新增论文</h2>
+          <p>只填写已核验信息；“待核验”的内容可以在局限与待办中注明。</p>
+        </div>
+        <button class="icon-button" type="button" data-close-dialog="paperDialog" aria-label="关闭">×</button>
+      </div>
+
+      <input id="paperId" type="hidden">
+      <div class="form-section">
+        <h3>基本信息</h3>
+        <div class="form-grid">
+          <label class="field field-full">
+            <span>中文题名 <b>*</b></span>
+            <input id="fieldTitle" name="title" required maxlength="300" placeholder="用原文题名，不自行改写">
+          </label>
+          <label class="field field-full">
+            <span>英文题名</span>
+            <input id="fieldTitleEn" name="title_en" maxlength="400" placeholder="Original title">
+          </label>
+          <label class="field">
+            <span>第一作者 / 作者列表</span>
+            <input id="fieldAuthors" name="authors" placeholder="多个作者用分号分隔">
+          </label>
+          <label class="field field-small">
+            <span>年份</span>
+            <input id="fieldYear" name="year" type="number" min="1800" max="2100" placeholder="2026">
+          </label>
+          <label class="field">
+            <span>期刊 / 会议 / 来源</span>
+            <input id="fieldVenue" name="venue" placeholder="期刊、会议或机构报告">
+          </label>
+          <label class="field">
+            <span>DOI</span>
+            <input id="fieldDoi" name="doi" placeholder="10.xxxx/xxxxx">
+          </label>
+          <label class="field field-full">
+            <span>原文或稳定链接</span>
+            <input id="fieldUrl" name="url" type="url" placeholder="https://…">
+          </label>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>研究结构</h3>
+        <div class="form-grid">
+          <label class="field">
+            <span>主分类</span>
+            <select id="fieldCategory" name="category">
+              <option>医疗散热</option>
+              <option>余热回收</option>
+              <option>热泵与储热</option>
+              <option>竞赛与综述</option>
+              <option>其他</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>阅读状态</span>
+            <select id="fieldStatus" name="status">
+              <option>待核验</option>
+              <option>已核验</option>
+              <option>已摘要</option>
+              <option>已精读</option>
+              <option>已引用</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>数据类型</span>
+            <select id="fieldDataType" name="data_type">
+              <option>实验</option>
+              <option>仿真</option>
+              <option>综述</option>
+              <option>案例</option>
+              <option>标准/指南</option>
+              <option>其他</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>关键词</span>
+            <input id="fieldTags" name="tags" placeholder="PCM; 医疗设备; 温控">
+          </label>
+          <label class="field field-full">
+            <span>医疗场景</span>
+            <input id="fieldMedicalScene" name="medical_scene" placeholder="例如：便携监护终端、医院热水、影像设备机房">
+          </label>
+          <label class="field field-full">
+            <span>散热 / 余热路线</span>
+            <input id="fieldThermalRoute" name="thermal_route" placeholder="例如：相变储热、热泵、换热器、温差发电">
+          </label>
+          <label class="field field-full">
+            <span>方法</span>
+            <textarea id="fieldMethods" name="methods" rows="2" placeholder="实验布置、模型、样本、系统边界"></textarea>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>阅读结论</h3>
+        <div class="form-grid">
+          <label class="field field-full">
+            <span>一句话结论</span>
+            <textarea id="fieldKeyFinding" name="key_finding" rows="3" placeholder="对象 + 方法 + 条件 + 结果；没有核验的数字不要写"></textarea>
+          </label>
+          <label class="field field-full">
+            <span>局限与待核验</span>
+            <textarea id="fieldLimitations" name="limitations" rows="3" placeholder="样本、工况、净能耗、医疗安全、合规、可靠性等限制"></textarea>
+          </label>
+          <label class="field field-full">
+            <span>我的笔记与下一步</span>
+            <textarea id="fieldNotes" name="notes" rows="4" placeholder="可验证假设、可复现实验、与当前选题的关系"></textarea>
+          </label>
+          <label class="field field-full range-field">
+            <span>与当前研究的相关性 <b id="relevanceValue">3 / 5</b></span>
+            <input id="fieldRelevance" name="relevance" type="range" min="1" max="5" value="3">
+          </label>
+        </div>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="button button-danger-ghost" id="deletePaper" type="button" hidden>删除论文</button>
+        <span class="action-spacer"></span>
+        <button class="button button-quiet" type="button" data-close-dialog="paperDialog">取消</button>
+        <button class="button button-primary" id="savePaper" type="submit">保存到论文库</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="importDialog" class="dialog">
+    <div class="dialog-head">
+      <div>
+        <div class="overline">BULK IMPORT</div>
+        <h2>批量导入文献</h2>
+        <p>支持 JSON、CSV 和 BibTeX。重复 DOI 或“题名 + 年份”会自动跳过。</p>
+      </div>
+      <button class="icon-button" type="button" data-close-dialog="importDialog" aria-label="关闭">×</button>
+    </div>
+    <div class="import-zone" id="importDrop">
+      <input id="importFile" type="file" accept=".json,.csv,.bib,.txt">
+      <span class="import-icon">⇧</span>
+      <strong>拖入文件，或点击选择</strong>
+      <small>最大建议 5 MB；文件只在浏览器中解析</small>
+    </div>
+    <div class="or-divider"><span>或者粘贴</span></div>
+    <label class="field">
+      <span>JSON / CSV / BibTeX 内容</span>
+      <textarea id="importText" rows="8" placeholder="粘贴文献内容…"></textarea>
+    </label>
+    <div class="dialog-actions">
+      <button class="button button-quiet" id="downloadTemplate" type="button">下载 CSV 模板</button>
+      <span class="action-spacer"></span>
+      <button class="button button-quiet" type="button" data-close-dialog="importDialog">取消</button>
+      <button class="button button-primary" id="runImport" type="button">开始导入</button>
+    </div>
+  </dialog>
+
+  <dialog id="settingsDialog" class="dialog">
+    <div class="dialog-head">
+      <div>
+        <div class="overline">DATABASE CONFIG</div>
+        <h2>线上数据库设置</h2>
+      </div>
+      <button class="icon-button" type="button" data-close-dialog="settingsDialog" aria-label="关闭">×</button>
+    </div>
+    <div class="settings-status" id="settingsStatus"></div>
+    <div class="settings-steps">
+      <div><b>01</b><span>创建 Supabase 项目并运行建库 SQL</span></div>
+      <div><b>02</b><span>在 `assets/config.js` 填写 Project URL 和 anon key</span></div>
+      <div><b>03</b><span>把 `web` 文件夹部署到 Netlify / Vercel</span></div>
+    </div>
+    <label class="field">
+      <span>当前配置</span>
+      <textarea id="configPreview" rows="4" readonly></textarea>
+    </label>
+    <p class="fine-print">只填写 Supabase 的 anon public key，绝不要把 service_role key 放进网页。</p>
+    <div class="dialog-actions">
+      <button class="button button-quiet" id="exportData" type="button">导出本机数据</button>
+      <span class="action-spacer"></span>
+      <button class="button button-primary" type="button" data-close-dialog="settingsDialog">知道了</button>
+    </div>
+  </dialog>
+
+  <dialog id="authDialog" class="dialog dialog-small">
+    <div class="dialog-head">
+      <div>
+        <div class="overline">CLOUD ACCESS</div>
+        <h2>登录云端论文库</h2>
+        <p>输入邮箱后会收到登录链接。登录后才能跨设备同步。</p>
+      </div>
+      <button class="icon-button" type="button" data-close-dialog="authDialog" aria-label="关闭">×</button>
+    </div>
+    <form id="authForm">
+      <label class="field">
+        <span>邮箱</span>
+        <input id="authEmail" type="email" required placeholder="name@example.com">
+      </label>
+      <button class="button button-primary button-block" type="submit">发送登录链接</button>
+    </form>
+    <div class="auth-divider"><span>或</span></div>
+    <p class="fine-print">如果尚未配置 Supabase，系统会停留在本机模式，数据不会自动上传。</p>
+  </dialog>
+
+  <dialog id="guideDialog" class="dialog">
+    <div class="dialog-head">
+      <div>
+        <div class="overline">LIBRARY PROTOCOL</div>
+        <h2>论文入库四步法</h2>
+      </div>
+      <button class="icon-button" type="button" data-close-dialog="guideDialog" aria-label="关闭">×</button>
+    </div>
+    <ol class="guide-list">
+      <li><b>先核验</b><span>题名、作者、年份、来源和 DOI 必须来自原文或稳定页面。</span></li>
+      <li><b>画热流</b><span>写清热源、温度、功率、热汇、系统边界和附加能耗。</span></li>
+      <li><b>再判价值</b><span>把医疗价值与能源价值分开，不把回收热量直接当作净节能。</span></li>
+      <li><b>落到行动</b><span>至少形成一个可验证假设、最小实验或可复算模型。</span></li>
+    </ol>
+    <div class="dialog-actions">
+      <button class="button button-primary" type="button" data-close-dialog="guideDialog">开始录入</button>
+    </div>
+  </dialog>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+  <div class="mobile-backdrop" id="mobileBackdrop"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="./assets/config.js"></script>
+  <script src="./assets/seed-data.js" defer></script>
+  <script src="./assets/app.js" defer></script>
+</body>
+</html>
