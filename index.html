@@ -354,6 +354,86 @@
     </form>
   </dialog>
 
+  <dialog id="detailDialog" class="dialog detail-dialog">
+    <div class="detail-hero">
+      <div class="detail-hero-top">
+        <div class="detail-badges">
+          <span class="paper-category" id="detailCategory">论文</span>
+          <span class="status-badge" id="detailStatus">已摘要</span>
+        </div>
+        <button class="icon-button detail-close" type="button" data-close-dialog="detailDialog" aria-label="关闭">×</button>
+      </div>
+      <h2 id="detailTitle">论文题名</h2>
+      <p class="detail-title-en" id="detailTitleEn"></p>
+      <p class="detail-citation" id="detailCitation"></p>
+      <div class="detail-actions">
+        <a class="button button-primary" id="detailPrimaryLink" href="#" target="_blank" rel="noopener noreferrer">阅读原文 ↗</a>
+        <a class="button button-quiet" id="detailScholarLink" href="#" target="_blank" rel="noopener noreferrer">查找开放版本</a>
+        <button class="button button-quiet" id="detailCopyDoi" type="button">复制 DOI</button>
+        <button class="button button-detail-edit" id="detailEdit" type="button">编辑记录</button>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <div class="detail-access-note" id="detailAccessNote">
+        此处展示数据库中的结构化摘要，不等同于全文精读；请通过上方链接查看原始论文。
+      </div>
+
+      <div class="detail-focus-grid">
+        <article class="detail-focus-card">
+          <span>医疗场景</span>
+          <p id="detailMedicalScene">待补充</p>
+        </article>
+        <article class="detail-focus-card">
+          <span>散热 / 余热路线</span>
+          <p id="detailThermalRoute">待补充</p>
+        </article>
+      </div>
+
+      <section class="detail-section detail-featured">
+        <div class="detail-section-label">CORE FINDING</div>
+        <h3>核心内容</h3>
+        <p id="detailFinding">尚未填写核心内容。</p>
+      </section>
+
+      <div class="detail-content-grid">
+        <section class="detail-section">
+          <h3>方法与实验条件</h3>
+          <p id="detailMethods">尚未填写。</p>
+        </section>
+        <section class="detail-section detail-caution">
+          <h3>局限与待核验</h3>
+          <p id="detailLimitations">尚未填写。</p>
+        </section>
+      </div>
+
+      <section class="detail-section">
+        <h3>我的研读笔记</h3>
+        <p id="detailNotes">尚未填写。</p>
+      </section>
+
+      <div class="detail-meta-row">
+        <div>
+          <span>研究相关性</span>
+          <strong id="detailRelevance">3 / 5</strong>
+        </div>
+        <div>
+          <span>数据类型</span>
+          <strong id="detailDataType">待分类</strong>
+        </div>
+        <div>
+          <span>收录来源</span>
+          <strong id="detailVenue">待核验</strong>
+        </div>
+      </div>
+
+      <div class="detail-footer">
+        <div class="detail-tags" id="detailTags"></div>
+        <a id="detailDoiLink" href="#" target="_blank" rel="noopener noreferrer">DOI</a>
+      </div>
+    </div>
+  </dialog>
+
   <dialog id="importDialog" class="dialog">
     <div class="dialog-head">
       <div>

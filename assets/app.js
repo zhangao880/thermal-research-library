@@ -21,6 +21,7 @@
     cloud: false,
     loaded: false,
     editingId: null,
+    detailId: null,
     view: localStorage.getItem("paper-hub-view") || "grid",
     filters: {
       query: "",
@@ -45,7 +46,12 @@
       "runImport", "downloadTemplate", "settingsDialog", "settingsStatus", "configPreview",
       "exportData", "authDialog", "authForm", "authEmail", "guideDialog", "toastRegion",
       "openSettings", "authButton", "modeTitle", "modeDescription", "navTotal", "statTotal",
-      "statRead", "statReadRate", "statPending", "statRecent"
+      "statRead", "statReadRate", "statPending", "statRecent",
+      "detailDialog", "detailCategory", "detailStatus", "detailTitle", "detailTitleEn",
+      "detailCitation", "detailPrimaryLink", "detailScholarLink", "detailCopyDoi", "detailEdit",
+      "detailAccessNote", "detailMedicalScene", "detailThermalRoute", "detailFinding",
+      "detailMethods", "detailLimitations", "detailNotes", "detailRelevance", "detailDataType",
+      "detailVenue", "detailTags", "detailDoiLink"
     ].forEach(function (id) {
       el[id] = document.getElementById(id);
     });
@@ -362,7 +368,7 @@
     el.paperGrid.addEventListener("click", function (event) {
       const card = event.target.closest("[data-paper-id]");
       if (card) {
-        openPaperDialog(card.dataset.paperId);
+        openDetailDialog(card.dataset.paperId);
       }
     });
 
@@ -370,7 +376,7 @@
       const card = event.target.closest("[data-paper-id]");
       if (card && (event.key === "Enter" || event.key === " ")) {
         event.preventDefault();
-        openPaperDialog(card.dataset.paperId);
+        openDetailDialog(card.dataset.paperId);
       }
     });
 
@@ -386,6 +392,19 @@
 
     el.paperForm.addEventListener("submit", savePaper);
     el.deletePaper.addEventListener("click", deleteCurrentPaper);
+    el.detailEdit.addEventListener("click", function () {
+      const id = state.detailId;
+      el.detailDialog.close();
+      openPaperDialog(id);
+    });
+    el.detailCopyDoi.addEventListener("click", function () {
+      const paper = state.papers.find(function (item) { return item.id === state.detailId; });
+      if (paper && paper.doi) {
+        copyText(paper.doi, "DOI 已复制。");
+      } else {
+        toast("这篇论文尚未录入 DOI。", "error");
+      }
+    });
     el.fieldRelevance.addEventListener("input", function () {
       el.relevanceValue.textContent = el.fieldRelevance.value + " / 5";
     });
@@ -634,9 +653,92 @@
       '  <div class="paper-title">' + escapeHtml(paper.title || "未命名论文") + "</div>",
       '  <div class="paper-meta"><span>' + escapeHtml(authorText) + "</span><span>" + escapeHtml(venueText) + "</span></div>",
       '  <p class="paper-finding ' + (paper.key_finding ? "" : "empty") + '">' + escapeHtml(finding) + "</p>",
-      '  <div class="paper-bottom">' + tags + '<span class="relevance" title="相关性 ' + escapeHtml(paper.relevance || 0) + '/5">' + relevanceDots + "</span></div>",
+      '  <div class="paper-bottom">' + tags + '<span class="card-open">查看内容 →</span><span class="relevance" title="相关性 ' + escapeHtml(paper.relevance || 0) + '/5">' + relevanceDots + "</span></div>",
       "</article>"
     ].join("");
+  }
+
+  function openDetailDialog(id) {
+    const paper = state.papers.find(function (item) { return item.id === id; });
+    if (!paper) {
+      toast("没有找到这篇论文记录。", "error");
+      return;
+    }
+
+    state.detailId = paper.id;
+    const doiUrl = paper.doi ? "https://doi.org/" + paper.doi.replace(/^https?:\/\/doi.org\//i, "") : "";
+    const primaryUrl = paper.url || doiUrl;
+    const directFullText = Boolean(primaryUrl && (
+      /ncbi\.nlm\.nih\.gov|pmc\.|dovepress\.com|nature\.com\/articles/i.test(primaryUrl)
+    ));
+    const citation = [
+      (paper.authors || []).join(", "),
+      paper.year ? "(" + paper.year + ")." : "",
+      paper.title,
+      paper.venue ? paper.venue + "." : "",
+      paper.doi ? "https://doi.org/" + paper.doi : ""
+    ].filter(Boolean).join(" ");
+
+    el.detailCategory.textContent = (paper.category || "其他") + " · " + (paper.data_type || "待分类");
+    el.detailStatus.textContent = paper.status || "待核验";
+    el.detailStatus.className = "status-badge " + (paper.status || "待核验");
+    el.detailTitle.textContent = paper.title || "未命名论文";
+    el.detailTitleEn.textContent = paper.title_en || "";
+    el.detailTitleEn.hidden = !paper.title_en;
+    el.detailCitation.textContent = citation;
+    el.detailMedicalScene.textContent = paper.medical_scene || "尚未提取具体医疗场景。";
+    el.detailThermalRoute.textContent = paper.thermal_route || "尚未提取散热或余热路线。";
+    el.detailFinding.textContent = paper.key_finding || "尚未填写核心结论。";
+    el.detailMethods.textContent = paper.methods || "尚未填写方法与实验条件。";
+    el.detailLimitations.textContent = paper.limitations || "尚未填写局限与待核验内容。";
+    el.detailNotes.textContent = paper.notes || "尚未填写研读笔记。";
+    el.detailRelevance.textContent = (paper.relevance || 3) + " / 5";
+    el.detailDataType.textContent = paper.data_type || "待分类";
+    el.detailVenue.textContent = paper.venue || "来源待核验";
+    el.detailTags.innerHTML = (paper.tags || []).map(function (tag) {
+      return '<span class="tag">' + escapeHtml(tag) + "</span>";
+    }).join("") || '<span class="tag">暂无标签</span>';
+
+    if (primaryUrl) {
+      el.detailPrimaryLink.href = primaryUrl;
+      el.detailPrimaryLink.textContent = directFullText ? "阅读开放全文 ↗" : "打开 DOI 页面 ↗";
+      el.detailPrimaryLink.hidden = false;
+    } else {
+      el.detailPrimaryLink.hidden = true;
+    }
+    el.detailScholarLink.href = "https://scholar.google.com/scholar?q=" + encodeURIComponent(paper.title || "");
+    el.detailAccessNote.textContent = directFullText
+      ? "上方提供开放全文入口。此处文字是数据库整理的结构化摘要，不等同于全文逐段精读。"
+      : "此处展示数据库整理的结构化摘要。若 DOI 页面需要订阅权限，可尝试“查找开放版本”或通过学校图书馆访问。";
+
+    if (paper.doi) {
+      el.detailDoiLink.href = doiUrl;
+      el.detailDoiLink.textContent = "DOI " + paper.doi;
+      el.detailDoiLink.hidden = false;
+      el.detailCopyDoi.hidden = false;
+    } else {
+      el.detailDoiLink.hidden = true;
+      el.detailCopyDoi.hidden = true;
+    }
+
+    el.detailDialog.showModal();
+  }
+
+  async function copyText(text, successMessage) {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast(successMessage, "success");
+    } catch (error) {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      const copied = document.execCommand("copy");
+      area.remove();
+      toast(copied ? successMessage : "复制失败，请手动选择 DOI。", copied ? "success" : "error");
+    }
   }
 
   function ensureWriteAccess() {
